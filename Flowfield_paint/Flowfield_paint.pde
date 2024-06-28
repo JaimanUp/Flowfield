@@ -10,11 +10,11 @@ import controlP5.*;
 import processing.pdf.*;
 
 
-PImage img;
+//PImage img;
 
 // general
-int generalHeight=900;
-int generalWidth=800;
+int generalHeight=500;
+int generalWidth=500;
 int smalleSize=int(mag(generalHeight-generalWidth, 0));
 
 
@@ -77,9 +77,9 @@ void setup() {
   cf = new ControlFrame(this, 300, generalHeight, "Controls");
   surface.setLocation(320, 10);
 
-img=loadImage("img.jpg");
-img.resize(1800,1100);
-image(img,0,0);
+//img=loadImage("img.jpg");
+//img.resize(1800,1100);
+//image(img,0,0);
 
 
 
