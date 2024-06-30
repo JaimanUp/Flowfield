@@ -58,21 +58,22 @@ class FlowField {
     // SUM(vector)/sum(vector*dist)
     PVector num=new PVector(0,0);
     PVector den=new PVector(0,0);
-    PVector look, lookPos;
+    PVector look=new PVector(0,0);
+    PVector lookPos=new PVector(0,0);
 
     for(float i=-1*fieldResolution; i<radio*2;i+=fieldResolution){
       for(float j=-1*fieldResolution;j<radio*2;j+=fieldResolution){
         lookPos=new PVector (i,j);
+        //println(lookPos);
         lookPos.add(pos);
+        //println(lookPos);
         look=lookup(lookPos);
         num.add(look);
         den.add(new PVector (i*look.x,j*look.y));   
-
+        println(num,den);
       }
 
     }
-                println(num,den);
-
     return(new PVector(num.x/den.x,num.y/den.y));
   }
 

@@ -39,8 +39,6 @@ class Automata {
     // What is the vector at that spot in the flow field?
     PVector desired2 = flow.lookup(position);  // old way
     PVector desired = flow.getField(position,scan);
-    println(position);
-    if (desired.mag()!=0){ println(desired.mag(), desired2.mag());}
     // check if it is 0
 
 
