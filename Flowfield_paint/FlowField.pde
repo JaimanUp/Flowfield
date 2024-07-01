@@ -1,14 +1,15 @@
-// based on The Nature of Code http://natureofcode.com Flow Field Following
+// based on The Nature of Code
+// http://natureofcode.com
+// Flow Field Following
 
 class FlowField {
 
   // A flow field is a two dimensional array of PVectors
   PVector[][] field;
   int cols, rows; // Columns and Rows
-  int resolution ; //
-  int maxValue=fieldResolution/3;
+  int resolution ;
 
-  float infScale=0.1;  // this is for visual aspcet
+  float infScale=0.1;                                               ////////
 
   FlowField(int r) {
     resolution = r;
@@ -16,98 +17,56 @@ class FlowField {
     cols = int(width/resolution);
     rows = int(height/resolution);
     field = new PVector[cols][rows];
-    reset("EMPTY");
-  }
-
-
-
-  // retart field to 0 VECTOR
-  void reset(String mode) {
-    // parameters for nosie field mode
-    float nx=2;
-    float ny=1;
-    float nIncrement=0.05;
-
-    for (int i = 0; i < cols; i++) {
-      
-      for (int j = 0; j < rows; j++) {
-        nx+=nIncrement*resolution;
-        ny+=nIncrement*resolution;
-        if(mode=="EMPTY"){field[i][j] = new PVector(0, 0);}
-        if(mode=="RANDOM"){field[i][j] = new PVector(random(-1*maxValue,maxValue), random(-1*maxValue,maxValue));}
-        if(mode=="NOISE"){field[i][j] = new PVector(map(noise(nx),0,1,-1*maxValue,maxValue),map(noise(ny),0,1,-1*maxValue,maxValue));}
-
-      }
-    }
-  }
-
- 
-
-
-
-  
-
-
-  PVector lookup(PVector lookup) {
-    int column = int(constrain(lookup.x/resolution, 0, cols-1));
-    int row = int(constrain(lookup.y/resolution, 0, rows-1));
-    return field[column][row];
-  }
-
-  PVector getField(PVector pos,int radio){
-    // SUM(vector)/sum(vector*dist)
-    PVector num=new PVector(0,0);
-    PVector den=new PVector(0,0);
-    PVector look=new PVector(0,0);
-    PVector lookPos=new PVector(0,0);
-
-    for(float i=-1*fieldResolution; i<radio*2;i+=fieldResolution){
-      for(float j=-1*fieldResolution;j<radio*2;j+=fieldResolution){
-        lookPos=new PVector (i,j);
-        //println(lookPos);
-        lookPos.add(pos);
-        //println(lookPos);
-        look=lookup(lookPos);
-        num.add(look);
-        den.add(new PVector (i*look.x,j*look.y));   
-        println(num,den);
-      }
-
-    }
-    return(new PVector(num.x/den.x,num.y/den.y));
+    reset();
   }
 
 
   //equation
+
   float eq(float x) {
+
     // return((x-5)/(sqrt( sq(x)+5))+1);
+
     return((6*x-10)/(7+sqrt( sq(x)+20))+0.5);
   }
 
+  // retart vectors to 0
+  void reset() {
 
+    for (int i = 0; i < cols; i++) {
+      for (int j = 0; j < rows; j++) {
+        field[i][j] = new PVector(0, 0);
+      }
+    }
+  }
 
   // transform field with the mosue imput.
   // The mouse prev to current mosue position will set a vector. if th vector is too litlle, the influence vector would be perpendicular,
   //if the vector is bigger it starts to move paralel. For that  theres a function ( saved in folder as an img)
 
   void influenceFlow(int radio ) {
+
+
     // trace vector
     PVector trace =new PVector (mouseX-pmouseX, mouseY-pmouseY);
-   
+
+
     // declare influence vector
     PVector influence= new PVector (0, 0);
     float traceMag= trace.mag();
-   
     // apply ecuation to get influence magnitud
     float influenceMag=eq(traceMag);
 
     // set influence vector : perpendicular if below brushDynamic, paralel above 0brushDynamic
     if (influenceMag<brushDynamic) {
+      //      println("inf <0");                                                       //////////////////////////////////
+
       influence.set(trace.y, -trace.x);
-      } 
-    else {
+    } else {
+      //            println("inf >0");                                                       //////////////////////////////////
       influence.set(trace.x, trace.y);
-      }
+    }
+    // apply calculates magnitud to influence vector
     influence.normalize();
     influence.mult(influenceMag*infScale);
 
@@ -173,7 +132,7 @@ class FlowField {
 
   void display() {
     background(255);
-    //image(img, 0, 0);
+    image(img, 0, 0);
 
     for (int i = 0; i < cols; i++) {
       for (int j = 0; j < rows; j++) {
@@ -202,5 +161,9 @@ class FlowField {
     popMatrix();
   }
 
-
+  PVector lookup(PVector lookup) {
+    int column = int(constrain(lookup.x/resolution, 0, cols-1));
+    int row = int(constrain(lookup.y/resolution, 0, rows-1));
+    return field[column][row];
+  }
 }

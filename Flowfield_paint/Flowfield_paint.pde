@@ -10,11 +10,11 @@ import controlP5.*;
 import processing.pdf.*;
 
 
-//PImage img;
+PImage img;
 
 // general
-int generalHeight=500;
-int generalWidth=500;
+int generalHeight=850;
+int generalWidth=600;
 int smalleSize=int(mag(generalHeight-generalWidth, 0));
 
 
@@ -53,7 +53,7 @@ float heeling=0;  // zozobrar el rumbo - change randomly the direction by little
 
 // FIELD VALUES
 boolean fieldVisible=true;
-int fieldResolution=25; // How large is each "cell" of the flow field
+int fieldResolution=5; // How large is each "cell" of the flow field
 
 //TRACE VALUES
 boolean traceVisible=true;
@@ -77,9 +77,10 @@ void setup() {
   cf = new ControlFrame(this, 300, generalHeight, "Controls");
   surface.setLocation(320, 10);
 
-//img=loadImage("img.jpg");
-//img.resize(1800,1100);
-//image(img,0,0);
+img=loadImage("img.jpeg");
+img.resize(600,850);
+
+image(img,0,0);
 
 
 
@@ -98,7 +99,7 @@ void setup() {
   for (int i = 0; i < 100; i++) {
     //innitial position ( set prev spoition innitiall the same):
     PVector pos=  new PVector(random(width), random(height));
-    automatas.add(new Automata(pos, pos, fieldResolution*2,random(20, 33), random(20, 30)));
+    automatas.add(new Automata(pos, pos, random(0.8, 3), random(0.1, 3.5)));
   }
 }
 
@@ -106,7 +107,7 @@ void setup() {
 
 
 void draw() {
-//image(img,0,0);
+image(img,0,0);
 
 
   // Display the flowfield in "flowShow" mode
@@ -154,7 +155,7 @@ void mouseDragged() {
 
 void keyPressed() {
   if (key=='f'||key=='F') {
-    flowfield.reset("EMPTY");
+    flowfield.reset();
   }
   if (key=='r'||key=='R') {
     //beginRecord(PDF, "x.pdf");
@@ -174,6 +175,7 @@ void keyPressed() {
     // traceWindow.background(255);
     traceWindow.endDraw();
     background(255);
+    println("delete traaces");
   }
   if (key=='x'||key=='X') {
     for (Automata v : automatas) {
@@ -181,4 +183,3 @@ void keyPressed() {
     }
   }
 }
-

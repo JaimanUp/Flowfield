@@ -11,19 +11,18 @@ class Automata {
   PVector prevPosition;
   PVector velocity;
   PVector acceleration;
-  int scan;           // espacio que escanea el campo vectorial
+  float r;
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
 
-  Automata(PVector l, PVector p,int mscan, float ms, float mf) {
+  Automata(PVector l, PVector p, float ms, float mf) {
     position = l.get();
     prevPosition=p.get();
-    scan = 15;//mscan;
-    maxspeed = 5;   //=ms;
-    maxforce = 10;    //=mf;
+    r = 1.0;
+    maxspeed = ms;
+    maxforce = mf;
     acceleration = new PVector(0, 0);
     velocity = new PVector(0, 0);
-    
   }
 
   public void run() {
@@ -37,13 +36,13 @@ class Automata {
 
   void follow(FlowField flow) {
     // What is the vector at that spot in the flow field?
-    PVector desired2 = flow.lookup(position);  // old way
-    PVector desired = flow.getField(position,scan);
+    PVector desired = flow.lookup(position);
     // check if it is 0
 
 
+
     // Scale it up by maxspeed
-     desired.mult(maxspeed);
+    // desired.mult(maxspeed);
 
     // Steering is desired minus velocity
     PVector steer = PVector.sub(desired, velocity);
@@ -86,7 +85,7 @@ class Automata {
     translate(position.x, position.y);
     rotate(theta);
     rectMode(CENTER);
-    rect(0, 0, 5, 5);
+    rect(0, 0, r*2, r/2);
     //fieldWindow.beginShape(TRIANGLES);
     //fieldWindow.vertex(0, -r*2);
     //fieldWindow.vertex(-r, r*2);
@@ -97,7 +96,6 @@ class Automata {
 
   // Wraparound
   void borders() {
-    int r=fieldResolution;
     if (position.x < -r) position.x = width+r;
     if (position.y < -r) position.y = height+r;
     if (position.x > width+r) position.x = -r;
@@ -111,8 +109,10 @@ class Automata {
   }
   boolean stopped() {
     if (mag(acceleration.x, acceleration.y)<0.005) {
+      println("stop");
       return(true);}
     else{
+    println("go");
     return(false);}
   }
   PVector[] trace() {
@@ -120,5 +120,10 @@ class Automata {
 
     return(results);
 
+    //if (traceVisible==true){
+    //  stroke(0,100);
+    //line(prevPosition.x, prevPosition.y, position.x, position.y);
+
+    //}
   }
 }
